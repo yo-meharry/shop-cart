@@ -5,10 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop Cart</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
+    <header>
+        <nav class="navbar">
+            <button class="menu-toggle" id="menu-toggle">&#9776;</button>
+            <h1 class="logo">My Shopping Cart</h1>
+            <button class="cart-toggle" id="cart-toggle">
+                &#128722;
+                <span id="cart-badge" class="cart-count">0</span>
+            </button>
+        </nav>
+    </header>
+    <aside class="menu-sidebar" id="menuSidebar">
+        <div class="menu-header">
+            <h2>Categories</h2>
+        </div>
+        <div class="menu-categories" id="menuCategories"></div>
+    </aside>
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>
