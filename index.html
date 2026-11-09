@@ -26,6 +26,25 @@
         <div class="menu-categories" id="menuCategories"></div>
     </aside>
     <div class="menu-overlay" id="menuOverlay"></div>
+    <main id="productGrid" class="product-grid"></main>
+
+    <div id="pagination" class="pagination">
+        <button id="prevBtn">Previous</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <aside id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="closeCart">✕</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <p>Total: <b id="cartTotal">$0</b></p>
+        </div>
+    </aside>
+    <div id="cartOverlay" class="cart-overlay"></div>
     <script type="module" src="js/main.js"></script>
 </body>
 
