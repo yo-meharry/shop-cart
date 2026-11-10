@@ -81,6 +81,10 @@ function renderProducts() {
     grid.appendChild(card);
 
     const btn = card.querySelector(".add-to-cart-btn");
+
+    const inCart = cart.find((item) => item.id === product.id);
+    btn.textContent = inCart ? `${inCart.quantity} in cart` : "Add to Cart";
+
     btn.addEventListener("click", () => {
       addToCart(product);
     });
@@ -213,3 +217,56 @@ function renderCart() {
 
   totalEl.textContent = `$${total.toFixed(2)}`;
 }
+
+function removeFromCart(id) {
+  cart = cart.filter((item) => {
+    return item.id !== id;
+  });
+
+  saveCart();
+  updateBadge();
+  renderProducts();
+  renderCart();
+}
+
+function increaseQty(id) {
+  const item = cart.find((item) => item.id === id);
+  if (!item) return;
+  item.quantity++;
+  saveCart();
+  updateBadge();
+  renderProducts();
+  renderCart();
+}
+
+function decreaseQty(id) {
+  const item = cart.find((item) => item.id === id);
+  if (!item) return;
+  item.quantity--;
+  if (item.quantity <= 0) {
+    removeFromCart(id);
+    return;
+  }
+  saveCart();
+  updateBadge();
+  renderProducts();
+  renderCart();
+}
+
+document.getElementById("cartItems").addEventListener("click", function (e) {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  const id = Number(btn.dataset.id);
+  const isInc = btn.classList.contains("inc");
+  const isDec = btn.classList.contains("dec");
+  const isDel = btn.classList.contains("del-btn");
+
+  if (isInc) {
+    increaseQty(id);
+  } else if (isDec) {
+    decreaseQty(id);
+  } else if (isDel) {
+    removeFromCart(id);
+  }
+});
