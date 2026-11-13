@@ -4,6 +4,8 @@ A simple shopping cart web app built with **vanilla JavaScript (ES modules)**, H
 
 No frameworks, no build step, no dependencies.
 
+🔗 **Live Demo:** [https://yo-meharry.github.io/shop-cart/](https://yo-meharry.github.io/shop-cart/)
+
 ## Features
 
 - **Live product data** fetched from the Fake Store API
