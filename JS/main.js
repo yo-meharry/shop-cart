@@ -1,7 +1,19 @@
+import {
+  cart,
+  loadCart,
+  addToCart,
+  removeFromCart,
+  increaseQty,
+  decreaseQty,
+  renderCart,
+  updateBadge,
+} from "./cart.js";
+
 let selectedCat = "all";
 let currentPage = 1;
+let products;
+let categories;
 
-let cart = [];
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const pageInfo = document.getElementById("pageInfo");
@@ -21,8 +33,6 @@ overlay.addEventListener("click", function () {
   overlay.classList.remove("show");
 });
 
-let products;
-let categories;
 async function fetchProducts() {
   try {
     const url = "https://fakestoreapi.com/products";
@@ -87,6 +97,7 @@ function renderProducts() {
 
     btn.addEventListener("click", () => {
       addToCart(product);
+      renderProducts();
     });
   });
 
@@ -118,35 +129,6 @@ function getFilteredProducts() {
   } else {
     return products.filter((product) => product.category === selectedCat);
   }
-}
-
-function saveCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function loadCart() {
-  const cartData = localStorage.getItem("cart");
-  if (cartData) {
-    cart = JSON.parse(cartData);
-  }
-}
-
-function updateBadge() {
-  const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-  document.getElementById("cart-badge").textContent = total;
-}
-
-function addToCart(product) {
-  const existing = cart.find((item) => item.id === product.id);
-  if (existing) {
-    existing.quantity++;
-  } else {
-    cart.push({ ...product, quantity: 1 });
-  }
-  saveCart();
-  updateBadge();
-  renderProducts();
-  renderCart();
 }
 
 async function init() {
@@ -181,78 +163,6 @@ cartOverlay.addEventListener("click", () => {
   cartOverlay.classList.remove("show");
 });
 
-function renderCart() {
-  const container = document.getElementById("cartItems");
-  const totalEl = document.getElementById("cartTotal");
-  container.innerHTML = "";
-
-  if (cart.length === 0) {
-    container.innerHTML = `<p class="empty-cart">Cart is Empty 🛒</p>`;
-    totalEl.textContent = "$0";
-    return;
-  }
-
-  let total = 0;
-
-  cart.forEach((item) => {
-    total += item.price * item.quantity;
-
-    const div = document.createElement("div");
-    div.classList.add("cart-item");
-    div.innerHTML = `
-      <img src="${item.image}" />
-      <div class="cart-item-info">
-        <h4>${item.title.slice(0, 30)}...</h4>
-        <p>$${item.price} × ${item.quantity}</p>
-      </div>
-      <div class="cart-item-actions">
-        <button class="qty-btn dec" data-id="${item.id}">−</button>
-        <span>${item.quantity}</span>
-        <button class="qty-btn inc" data-id="${item.id}">+</button>
-        <button class="del-btn" data-id="${item.id}">🗑</button>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-
-  totalEl.textContent = `$${total.toFixed(2)}`;
-}
-
-function removeFromCart(id) {
-  cart = cart.filter((item) => {
-    return item.id !== id;
-  });
-
-  saveCart();
-  updateBadge();
-  renderProducts();
-  renderCart();
-}
-
-function increaseQty(id) {
-  const item = cart.find((item) => item.id === id);
-  if (!item) return;
-  item.quantity++;
-  saveCart();
-  updateBadge();
-  renderProducts();
-  renderCart();
-}
-
-function decreaseQty(id) {
-  const item = cart.find((item) => item.id === id);
-  if (!item) return;
-  item.quantity--;
-  if (item.quantity <= 0) {
-    removeFromCart(id);
-    return;
-  }
-  saveCart();
-  updateBadge();
-  renderProducts();
-  renderCart();
-}
-
 document.getElementById("cartItems").addEventListener("click", function (e) {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -264,9 +174,12 @@ document.getElementById("cartItems").addEventListener("click", function (e) {
 
   if (isInc) {
     increaseQty(id);
+    renderProducts();
   } else if (isDec) {
     decreaseQty(id);
+    renderProducts();
   } else if (isDel) {
     removeFromCart(id);
+    renderProducts();
   }
 });
